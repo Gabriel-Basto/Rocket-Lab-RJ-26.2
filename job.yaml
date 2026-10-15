@@ -1,0 +1,35 @@
+resources:
+  jobs:
+    New_Job_2026_10_14_20_16_20:
+      name: New Job 2026-10-14 20:16:20
+      trigger:
+        pause_status: UNPAUSED
+        periodic:
+          interval: 6
+          unit: HOURS
+      tasks:
+        - task_key: to_Bronze
+          notebook_task:
+            notebook_path: /Workspace/Users/gabrielpgpbasto@gmail.com/Rocket-Lab-RJ-26.2/Ingestao_Bronze.ipynb
+            source: WORKSPACE
+        - task_key: to_Silver
+          depends_on:
+            - task_key: to_Bronze
+          notebook_task:
+            notebook_path: /Workspace/Users/gabrielpgpbasto@gmail.com/Rocket-Lab-RJ-26.2/Bronze_To_Silver.ipynb
+            source: WORKSPACE
+        - task_key: to_Gold
+          depends_on:
+            - task_key: to_Silver
+          notebook_task:
+            notebook_path: /Workspace/Users/gabrielpgpbasto@gmail.com/Rocket-Lab-RJ-26.2/Silver_to_Gold.ipynb
+            source: WORKSPACE
+        - task_key: Views
+          depends_on:
+            - task_key: to_Gold
+          notebook_task:
+            notebook_path: /Workspace/Users/gabrielpgpbasto@gmail.com/Rocket-Lab-RJ-26.2/Views
+            source: WORKSPACE
+      queue:
+        enabled: true
+      performance_target: PERFORMANCE_OPTIMIZED
